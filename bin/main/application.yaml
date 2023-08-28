@@ -1,0 +1,44 @@
+#port 수정
+server:
+  port: 9090
+  servlet:
+    session:
+      tracking-modes: cookie
+
+
+#DB Connection
+spring:
+  datasource:
+    url: jdbc:mariadb
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: root
+    password: root
+   
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+        show_sql: true
+        format_sql: true
+        
+  thymeleaf:
+    cache: false
+ 
+logging.level:
+  org:
+    hibernate:
+      SQL: debug
+      type: debug  
+    
+    
+#Kakao
+kakao:
+  clientId: 1
+  redirectUri: 1
+  restApiKey: 1
+  
+#myUrl
+my:
+  loginUrl : localhost:3000
