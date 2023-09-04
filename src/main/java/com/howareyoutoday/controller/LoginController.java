@@ -18,6 +18,7 @@ import com.howareyoutoday.service.KaKaoService;
 
 import lombok.RequiredArgsConstructor;
 
+
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/member")
@@ -71,8 +72,10 @@ public class LoginController {
 		cookie.setHttpOnly(true); // HttpOnly 설정
 
 
-		// 쿠키를 HTTP 응답 헤더에 추가
-		response.addCookie(cookie);
+		String cookieValue = String.format("%s=%s; Path=/; Secure; HttpOnly; SameSite=None", cookie.getName(), cookie.getValue());
+    		response.addHeader("Set-Cookie", cookieValue);
+
+
 
 		// ci는 비즈니스 전환후 검수신청 -> 허락받아야 수집 가능
 		return "redirect:https://" + LOGIN_URL + userId + "/home";
