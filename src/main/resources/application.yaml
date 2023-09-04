@@ -1,6 +1,6 @@
 #port 수정
 server:
-  port: 9090
+  port: 8080
   servlet:
     session:
       tracking-modes: cookie
