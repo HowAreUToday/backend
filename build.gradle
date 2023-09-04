@@ -36,9 +36,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter'
-	
-	api 'org.apache.httpcomponents:httpclient:4.5.7'
-    implementation 'org.apache.commons:commons-lang3:3.5'
+
 
 	implementation group: 'org.json', name: 'json', version: '20210307' // 또는 최신 버전
 
