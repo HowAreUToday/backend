@@ -21,12 +21,12 @@ public class Config implements WebMvcConfigurer {
     public FilterRegistrationBean<CorsFilter> corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("https://frontend-c9cka2iv5-howareyoutoday.vercel.app");
+        config.addAllowedOrigin("https://howareyoutoday.vercel.app");
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("http://localhost:3000/");
 
         config.addAllowedOrigin("http://localhost:3000/home");
-        config.addAllowedOrigin("https://frontend-c9cka2iv5-howareyoutoday.vercel.app/");
+        config.addAllowedOrigin("https://howareyoutoday.vercel.app/");
         config.addAllowedOrigin("http://172.30.1.77:3000");
 
         config.addAllowedMethod("*");
