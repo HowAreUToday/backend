@@ -10,10 +10,10 @@ server:
 #DB Connection
 spring:
   datasource:
-    url: 1
-    driver-class-name: org.mariadb.jdbc.Driver
-    username: root
-    password: dh1
+    url: ${url}
+    driver-class-name: ${driverClassName}
+    username: ${username}
+    password: ${password}
    
   jpa:
     hibernate:
@@ -36,11 +36,13 @@ logging.level:
     
 #Kakao
 kakao:
-  clientId: 1
-  redirectUri: h1
-  restApiKey: 7f1
+  clientId: ${clientId}
+  redirectUri: ${redirectUri}
+  restApiKey: ${restApiKey}
+
+
   
 #myUrl
 my:
-  loginUrl : loc1
-  aiurl : 1
+  loginUrl : ${loginUrl}
+  aiurl : ${aiurl}
