@@ -67,8 +67,9 @@ public class LoginController {
 		Cookie cookie = new Cookie("userId", userCookie);
 		cookie.setMaxAge(-1);
 		cookie.setPath("/"); // 쿠키의 경로 설정
-		cookie.setSameSite("None"); 
-		cookie.setSecure(true); 
+		cookie.setSecure(true); // Secure 설정 (HTTPS 연결에서만 전송)
+		cookie.setHttpOnly(true); // HttpOnly 설정
+
 
 		// 쿠키를 HTTP 응답 헤더에 추가
 		response.addCookie(cookie);
