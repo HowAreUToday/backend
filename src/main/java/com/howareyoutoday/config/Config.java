@@ -8,12 +8,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import org.springframework.format.FormatterRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import com.howareyoutoday.Interceptor.LoginInterceptor;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.core.convert.converter.Converter;
 import java.text.ParseException;
@@ -28,7 +23,12 @@ public class Config implements WebMvcConfigurer {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("https://gonggam.vercel.app/");
         config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("http://localhost:3000/");
+
+        config.addAllowedOrigin("http://localhost:3000/home");
         config.addAllowedOrigin("https://gonggam.vercel.app");
+        config.addAllowedOrigin("http://172.30.1.77:3000");
+
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setAllowCredentials(true);
@@ -59,11 +59,4 @@ public class Config implements WebMvcConfigurer {
         }
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor())
-                .order(1)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/member/**", "/AD/**"); // 제외할 경우
-    }
 }

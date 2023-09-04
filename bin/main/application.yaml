@@ -6,13 +6,14 @@ server:
       tracking-modes: cookie
 
 
+
 #DB Connection
 spring:
   datasource:
-    url: jdbc:mariadb
+    url: jdbc:mariadb://svc.sel5.cloudtype.app:30496
     driver-class-name: org.mariadb.jdbc.Driver
     username: root
-    password: root
+    password: dhsmfdjEo123!
    
   jpa:
     hibernate:
@@ -35,10 +36,10 @@ logging.level:
     
 #Kakao
 kakao:
-  clientId: 1
-  redirectUri: 1
-  restApiKey: 1
+  clientId: 7fdfd8565afe58703c42be53fa7c4047
+  redirectUri: http://localhost:9090/member/kakao
+  restApiKey: 7fdfd8565afe58703c42be53fa7c4047
   
 #myUrl
 my:
-  loginUrl : localhost:3000
+  loginUrl : localhost:3000/

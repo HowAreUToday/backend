@@ -35,6 +35,17 @@ dependencies {
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter'
+	
+	api 'org.apache.httpcomponents:httpclient:4.5.7'
+    implementation 'org.apache.commons:commons-lang3:3.5'
+
+	implementation group: 'org.json', name: 'json', version: '20210307' // 또는 최신 버전
+
+	implementation group: 'javax.json', name: 'javax.json-api', version: '1.1.5' // 또는 최신 버전
+	implementation group: 'org.glassfish', name: 'javax.json', version: '1.1.5' // 또는 최신 버전
+
+
 }
 
 tasks.named('test') {
