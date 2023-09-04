@@ -42,7 +42,7 @@ public class DataController {
         }
 
         List<Daily> daily = dataService.getHomeDaily(member.getID());
-        ;
+        
 
         // Map<String, Object> memberentry = new HashMap<>();
         // memberentry.put("name", member.getName());
