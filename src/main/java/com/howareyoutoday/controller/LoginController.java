@@ -72,7 +72,7 @@ public class LoginController {
 		cookie.setHttpOnly(true); // HttpOnly 설정
 
 
-		String cookieValue = String.format("%s=%s; Path=/; Secure; HttpOnly; SameSite=None; Domain=%s", cookie.getName(), cookie.getValue(), LOGIN_URL);
+		String cookieValue = String.format("%s=%s; Path=/; Secure; HttpOnly; SameSite=None; Domain=https://howareyoutoday.vercel.app/", cookie.getName(), cookie.getValue());
     		response.addHeader("set-cookie", cookieValue);
 
 
