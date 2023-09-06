@@ -72,7 +72,7 @@ public class LoginController {
 		cookie.setHttpOnly(true); // HttpOnly 설정
 
 
-		String cookieValue = String.format("%s=%s; Path=/; Secure; HttpOnly; SameSite=None", cookie.getName(), cookie.getValue());
+		String cookieValue = String.format("%s=%s; Path=/; Secure; HttpOnly; SameSite=None; Domain=%s", cookie.getName(), cookie.getValue(), LOGIN_URL);
     		response.addHeader("set-cookie", cookieValue);
 
 
