@@ -21,8 +21,8 @@ public class Config implements WebMvcConfigurer {
     public FilterRegistrationBean<CorsFilter> corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("https://howareyoutoday.shop");
-        config.addAllowedOrigin("https://howareyoutoday.shop/");
+        config.addAllowedOrigin("https://www.howareyoutoday.shop/");
+        config.addAllowedOrigin("https://www.howareyoutoday.shop");
 
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("http://localhost:3000/");
