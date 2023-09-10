@@ -157,6 +157,7 @@ public class DataService {
 
         // CompletableFuture를 반환
         return responseFuture.thenApply(response -> {
+            try {
             String responseBody = response.body();
 
             // "text" 필드의 값을 추출하기 위한 정규 표현식
@@ -170,15 +171,26 @@ public class DataService {
                 // 정규 표현식으로 "text" 필드의 값을 추출
                 textValue = m.group(1);
                 // 백슬래시로 이스케이핑된 문자열을 UTF-8로 디코딩
+                textValue = unescapeUnicode(textValue);
+                saveChatHistory(id, day, text, textValue);
+
+                // AI 응답을 반환
+                return textValue;
+            } else {
+                // "text" 필드를 찾지 못한 경우 예외 처리
+                throw new RuntimeException("Response does not contain 'text' field");
             }
+        } catch (Exception e) {
+            // 예외 발생 시 saveChatHistory 호출 후 "생성에러" 반환
+            saveChatHistory(id, day, text, "생성에러");
+            throw new RuntimeException("Error processing response", e);
+        }
+    }).exceptionally(e -> {
+        // CompletableFuture 내부에서 발생한 예외 처리
+        saveChatHistory(id, day, text, "생성에러");
+        return "생성에러";
+    });
 
-            textValue = unescapeUnicode(textValue);
-
-            saveChatHistory(id, day, text, textValue);
-
-            // AI 응답을 반환
-            return textValue;
-        });
     }
 
     public static String unescapeUnicode(String input) {
