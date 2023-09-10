@@ -182,7 +182,7 @@ public class DataService {
             }
         } catch (Exception e) {
             // 예외 발생 시 saveChatHistory 호출 후 "생성에러" 반환
-            saveChatHistory(id, day, text, "생성에러");
+            saveChatHistory(id, day, text, "생성에러 400");
             throw new RuntimeException("Error processing response", e);
         }
     }).exceptionally(e -> {
