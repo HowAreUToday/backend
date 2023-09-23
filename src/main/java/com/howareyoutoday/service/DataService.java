@@ -361,7 +361,7 @@ public class DataService {
                 t5Text = unescapeUnicode(t5Text);
                 openaiText = unescapeUnicode(openaiText);
 
-                textValue = "T5 요약\n\n" + t5Text + "\n\nOPENAI 요약\n\n" + openaiText;
+                textValue = "T5 요약\\n\\n" + t5Text + "\\n\\nOPENAI 요약\\n\\n" + openaiText;
 
                 if (t5Text == null && openaiText == null)
                     return false;
