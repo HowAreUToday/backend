@@ -301,7 +301,7 @@ public class DataService {
                 int who = resultSet.getInt("Who");
                 conversation.add(message);
 
-                if (who == 1) {
+                if (who == 0) {
                     // 사용자 대화 뒤에 AI 대화가 오면 대화 기록을 추가하고 초기화
                     chatHistory.add(conversation);
                     conversation = new ArrayList<>();
