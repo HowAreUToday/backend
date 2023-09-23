@@ -17,6 +17,7 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -132,14 +133,49 @@ public class DataService {
     }
 
     public CompletableFuture<String> getChatAI(int id, String text, String day) {
+        Connection connection;
+        PreparedStatement selectStmt = null;
+        List<List<String>> chatHistory = new ArrayList<>();
+        List<String> conversation = new ArrayList<>();
+
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, SQL_PASSWORD);
+
+            String selectSql = "SELECT * FROM HAUTmain." + id + "_chat WHERE Day = ?";
+            selectStmt = connection.prepareStatement(selectSql);
+            selectStmt.setString(1, day); // day 값을 바인딩합니다.
+
+            // SQL 쿼리 실행
+            ResultSet resultSet = selectStmt.executeQuery();
+
+            while (resultSet.next()) {
+                String message = resultSet.getString("Message");
+                int who = resultSet.getInt("Who");
+                conversation.add(message);
+
+                if (who == 1) {
+                    // 사용자 대화 뒤에 AI 대화가 오면 대화 기록을 추가하고 초기화
+                    chatHistory.add(conversation);
+                    conversation = new ArrayList<>();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         // HttpClient 생성
         HttpClient httpClient = HttpClient.newBuilder().build();
 
         // HTTP POST 요청을 보낼 URL 지정
         String url = AIURL + "/gen";
 
-        // JSON 형식의 요청 바디 데이터 생성
-        String jsonBody = "{\"text\": \"" + text + "\"}";
+        JSONObject requestinput = new JSONObject();
+
+        requestinput.put("message", text);
+        requestinput.put("history", chatHistory);
+
+        String jsonBody = requestinput.toString();
 
         // HTTP Request BodyPublisher 생성
         BodyPublisher requestBody = BodyPublishers.ofString(jsonBody);
@@ -158,38 +194,38 @@ public class DataService {
         // CompletableFuture를 반환
         return responseFuture.thenApply(response -> {
             try {
-            String responseBody = response.body();
+                String responseBody = response.body();
 
-            // "text" 필드의 값을 추출하기 위한 정규 표현식
-            String pattern = "\"text\":\"(.*?)\"";
-            Pattern r = Pattern.compile(pattern);
+                // "text" 필드의 값을 추출하기 위한 정규 표현식
+                String pattern = "\"text\":\"(.*?)\"";
+                Pattern r = Pattern.compile(pattern);
 
-            Matcher m = r.matcher(responseBody);
+                Matcher m = r.matcher(responseBody);
 
-            String textValue = "";
-            if (m.find()) {
-                // 정규 표현식으로 "text" 필드의 값을 추출
-                textValue = m.group(1);
-                // 백슬래시로 이스케이핑된 문자열을 UTF-8로 디코딩
-                textValue = unescapeUnicode(textValue);
-                saveChatHistory(id, day, text, textValue);
+                String textValue = "";
+                if (m.find()) {
+                    // 정규 표현식으로 "text" 필드의 값을 추출
+                    textValue = m.group(1);
+                    // 백슬래시로 이스케이핑된 문자열을 UTF-8로 디코딩
+                    textValue = unescapeUnicode(textValue);
+                    saveChatHistory(id, day, text, textValue);
 
-                // AI 응답을 반환
-                return textValue;
-            } else {
-                // "text" 필드를 찾지 못한 경우 예외 처리
-                throw new RuntimeException("Response does not contain 'text' field");
+                    // AI 응답을 반환
+                    return textValue;
+                } else {
+                    // "text" 필드를 찾지 못한 경우 예외 처리
+                    throw new RuntimeException("Response does not contain 'text' field");
+                }
+            } catch (Exception e) {
+                // 예외 발생 시 saveChatHistory 호출 후 "생성에러" 반환
+                saveChatHistory(id, day, text, "생성에러 400");
+                throw new RuntimeException("Error processing response", e);
             }
-        } catch (Exception e) {
-            // 예외 발생 시 saveChatHistory 호출 후 "생성에러" 반환
-            saveChatHistory(id, day, text, "생성에러 400");
-            throw new RuntimeException("Error processing response", e);
-        }
-    }).exceptionally(e -> {
-        // CompletableFuture 내부에서 발생한 예외 처리
-        saveChatHistory(id, day, text, "생성에러");
-        return "생성에러";
-    });
+        }).exceptionally(e -> {
+            // CompletableFuture 내부에서 발생한 예외 처리
+            saveChatHistory(id, day, text, "생성에러");
+            return "생성에러";
+        });
 
     }
 
@@ -247,7 +283,8 @@ public class DataService {
     public Boolean makeDaily(String id, String day, String userId) {
         Connection connection;
         PreparedStatement selectStmt = null;
-        String chatText = "";
+        List<String> conversation = new ArrayList<>();
+        List<List<String>> chatHistory = new ArrayList<>();
 
         try {
             connection = DriverManager.getConnection(URL, USERNAME, SQL_PASSWORD);
@@ -260,12 +297,14 @@ public class DataService {
             ResultSet resultSet = selectStmt.executeQuery();
 
             while (resultSet.next()) {
-                boolean isUser = resultSet.getBoolean("Who"); // true면 사용자, false면 AI
-                String content = resultSet.getString("Message");
-                if (isUser) {
-                    chatText += "사용자: " + content + "\\n";
-                } else {
-                    chatText += "AI: " + content + "\\n";
+                String message = resultSet.getString("Message");
+                int who = resultSet.getInt("Who");
+                conversation.add(message);
+
+                if (who == 1) {
+                    // 사용자 대화 뒤에 AI 대화가 오면 대화 기록을 추가하고 초기화
+                    chatHistory.add(conversation);
+                    conversation = new ArrayList<>();
                 }
             }
 
@@ -276,7 +315,11 @@ public class DataService {
             String url = AIURL + "/makeDaily";
 
             // JSON 형식의 요청 바디 데이터 생성
-            String jsonBody = "{\"text\": \"" + chatText + "\"}";
+            JSONObject requestinput = new JSONObject();
+
+            requestinput.put("history", chatHistory);
+
+            String jsonBody = requestinput.toString();
 
             // HTTP Request BodyPublisher 생성
             BodyPublisher requestBody = BodyPublishers.ofString(jsonBody);
@@ -296,21 +339,31 @@ public class DataService {
             return responseFuture.thenApply(response -> {
                 String responseBody = response.body();
 
-                // "text" 필드의 값을 추출하기 위한 정규 표현식
-                String pattern = "\"text\":\"(.*?)\"";
-                Pattern r = Pattern.compile(pattern);
+                JSONObject jsonResponse = new JSONObject(responseBody);
 
-                Matcher m = r.matcher(responseBody);
+                String t5Text = jsonResponse.getString("T5_text");
+                String openaiText = jsonResponse.getString("OPENAI_text");
+
+                // // "text" 필드의 값을 추출하기 위한 정규 표현식
+                // String pattern = "\"text\":\"(.*?)\"";
+                // Pattern r = Pattern.compile(pattern);
+
+                // Matcher m = r.matcher(responseBody);
+                // if (m.find()) {
+                // // 정규 표현식으로 "text" 필드의 값을 추출
+                // textValue = m.group(1);
+                // // 백슬래시로 이스케이핑된 문자열을 UTF-8로 디코딩
+                // textValue = unescapeUnicode(textValue);
+                // }
 
                 String textValue = null;
-                if (m.find()) {
-                    // 정규 표현식으로 "text" 필드의 값을 추출
-                    textValue = m.group(1);
-                    // 백슬래시로 이스케이핑된 문자열을 UTF-8로 디코딩
-                    textValue = unescapeUnicode(textValue);
-                }
 
-                if (textValue == null)
+                t5Text = unescapeUnicode(t5Text);
+                openaiText = unescapeUnicode(openaiText);
+
+                textValue = "T5 요약\n\n" + t5Text + "\n\nOPENAI 요약\n\n" + openaiText;
+
+                if (t5Text == null && openaiText == null)
                     return false;
 
                 try {
@@ -347,6 +400,10 @@ public class DataService {
             deleteStmt.setString(1, day);
             // SQL DELETE 쿼리 실행
             deleteStmt.executeUpdate();
+
+            if (deleteStmt != null) {
+                deleteStmt.close();
+            }
 
             // HAUTmain." + id + "_daily 테이블에서 해당 날짜의 데이터 삭제
             String deleteDailySql = "DELETE FROM HAUTmain." + id + "_daily WHERE Day = ?";

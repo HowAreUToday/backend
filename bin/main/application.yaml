@@ -1,6 +1,6 @@
 #port 수정
 server:
-  port: 9090
+  port:
   servlet:
     session:
       tracking-modes: cookie
@@ -10,10 +10,10 @@ server:
 #DB Connection
 spring:
   datasource:
-    url: jdbc:mariadb://svc.sel5.cloudtype.app:30496
-    driver-class-name: org.mariadb.jdbc.Driver
-    username: root
-    password: dhsmfdjEo123!
+    url: ${url}
+    driver-class-name: ${driverClassName}
+    username: ${username}
+    password: ${password}
    
   jpa:
     hibernate:
@@ -36,10 +36,13 @@ logging.level:
     
 #Kakao
 kakao:
-  clientId: 7fdfd8565afe58703c42be53fa7c4047
-  redirectUri: http://localhost:9090/member/kakao
-  restApiKey: 7fdfd8565afe58703c42be53fa7c4047
+  clientId: ${clientId}
+  redirectUri: ${redirectUri}
+  restApiKey: ${restApiKey}
+
+
   
 #myUrl
 my:
-  loginUrl : localhost:3000/
+  loginUrl : ${loginUrl}
+  aiurl : ${aiurl}
