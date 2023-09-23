@@ -141,7 +141,7 @@ public class DataService {
         try {
             connection = DriverManager.getConnection(URL, USERNAME, SQL_PASSWORD);
 
-            String selectSql = "SELECT * FROM HAUTmain." + id + "_chat WHERE Day = ?";
+            String selectSql = "SELECT * FROM HAUTmain." + id + "_chat WHERE ChatDate = ?";
             selectStmt = connection.prepareStatement(selectSql);
             selectStmt.setString(1, day); // day 값을 바인딩합니다.
 
