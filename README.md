@@ -1,8 +1,10 @@
 # Project Title
 
-"How are you Today?"의 챗봇 서버입니다.
+"How are you Today?"의 백엔드 서버입니다.
 
-[huggingface에 파인튜닝된 요약모델](https://huggingface.co/HowAreYouToday/KoT5-summarization)
+### [서비스바로가기](https://www.howareyoutoday.shop)
+
+<br><br>
 
 ## Getting Started
 
@@ -11,45 +13,33 @@
 ### Project Download
 
 ```bash
-git clone https://github.com/HowAreUToday/tool.git
+git clone https://github.com/HowAreUToday/backend.git
 ```
 
 ### Prerequisites
 
-해당 프로젝트는 파이썬 3.8.18 버젼에서 구축됐습니다.
-3.8.18이 아닌 3.8로 명시하여 다운로드시 langchain에서 패키지 관련 에러가 발생할 수 있습니다.
+해당 프로젝트는 자바스프링 11 버젼에서 구축됐습니다.
 
-```bash
-conda create --name MyProject python==3.8.18
-```
 
 ### Installation and Usage
 
-1. 관련 패키지 다운로드
+1. yaml 파일 설정
+
+서버 도메인 및 DB 변수를 알맞게 설정하세요.
+<br>
+
+2. 실행
 
 ```bash
-pip install -r requirements.txt
+AppApplication 자바 파일 실행
 ```
-
-2. env 파일 설정
-
-openAI에서 발급받은 인증키를 입력하여 주세요.
-
-3. 실행
-
-```bash
-python server.py
-```
+<br><br>
 
 ## License
 
 이 프로젝트의 License관련 자세한 내용은 [LICENSE.md](LICENSE.md) 파일을 참조하십시오.
 
-## References
-
-이 프로젝트는 중 일부 T5 요약 모델은 paust_pkot팀의 사전학습 모델을 기반으로 학습됐습니다.
-
-- [paust_pkot5_v1](https://github.com/paust-team/pko-t5) by Dennis Park (2022)
+<br><br>
 
 ## Author & Acknowledgments
 
