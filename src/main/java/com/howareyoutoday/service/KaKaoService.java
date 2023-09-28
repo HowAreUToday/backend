@@ -235,7 +235,8 @@ public class KaKaoService {
                                 + "_daily ("
                                 + "ID INT AUTO_INCREMENT PRIMARY KEY,"
                                 + "Day DATE,"
-                                + "Text TEXT"
+                                + "Text TEXT,"
+                                + "imoticon INT"
                                 + ")";
 
                         Statement createTableStmt = connection.createStatement();

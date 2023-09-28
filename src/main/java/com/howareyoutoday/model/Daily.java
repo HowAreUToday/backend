@@ -13,4 +13,6 @@ public class Daily {
     private int ID;
     private String Day;
     private String Text;
+    private Integer Emotion;
 }
+

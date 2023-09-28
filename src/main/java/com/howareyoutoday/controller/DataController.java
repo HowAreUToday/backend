@@ -87,6 +87,7 @@ public class DataController {
             groupedData.put("day", daily.getDay());
             groupedData.put("id", daily.getID());
             groupedData.put("text", daily.getText());
+            groupedData.put("imoticon", daily.getEmotion());
 
             String json = objectMapper.writeValueAsString(groupedData);
 

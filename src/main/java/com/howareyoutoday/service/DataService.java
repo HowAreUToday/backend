@@ -92,6 +92,7 @@ public class DataService {
                 daily.setID(resultSet.getInt("ID"));
                 daily.setDay(resultSet.getString("Day"));
                 daily.setText(resultSet.getString("Text"));
+                daily.setEmotion(resultSet.getInt("imoticon"));
 
                 // Daily 객체를 리스트에 추가
                 dailyList.add(daily);
@@ -122,6 +123,7 @@ public class DataService {
                 daily.setID(resultSet.getInt("ID"));
                 daily.setDay(resultSet.getString("Day"));
                 daily.setText(resultSet.getString("Text"));
+                daily.setEmotion(resultSet.getInt("imoticon"));
 
             }
             return daily;
@@ -343,6 +345,7 @@ public class DataService {
 
                 String t5Text = jsonResponse.getString("T5_text");
                 String openaiText = jsonResponse.getString("OPENAI_text");
+                Integer Emotion = jsonResponse.getInt("Emotion");
 
                 // // "text" 필드의 값을 추출하기 위한 정규 표현식
                 // String pattern = "\"text\":\"(.*?)\"";
@@ -367,10 +370,12 @@ public class DataService {
                     return false;
 
                 try {
-                    String insertSql = "INSERT INTO HAUTmain." + id + "_daily (Day, Text) VALUES (?, ?)";
+                    String insertSql = "INSERT INTO HAUTmain." + id + "_daily (Day, Text, imoticon) VALUES (?, ?, ?)";
                     PreparedStatement insertStmt = connection.prepareStatement(insertSql);
                     insertStmt.setString(1, day);
                     insertStmt.setString(2, textValue);
+                    insertStmt.setInt(3, Emotion);
+
                     insertStmt.executeUpdate();
                 } catch (SQLException e) {
                     e.printStackTrace();
